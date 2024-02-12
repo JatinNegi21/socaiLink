@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -19,7 +18,7 @@ import { PostValidation } from "@/lib/validation"
 import { Models } from "appwrite"
 import { useCreatePost, useUpdatePost } from "@/lib/react-query/queriesAndMutatiuons"
 import { useUserContext } from "@/context/AuthContext"
-import { toast, useToast } from "../ui/use-toast"
+import {  useToast } from "../ui/use-toast"
 import { useNavigate } from "react-router-dom"
 import Loader from "../shared/Loader"
 
@@ -49,10 +48,10 @@ const PostForm = ({post, action}: PostFormProps) => {
 
 
    // Query
-    const { mutateAsync: createPost, isLoading: isLoadingCreate } = useCreatePost();
+    const { mutateAsync: createPost, isPending: isLoadingCreate } = useCreatePost();
 
     
-    const { mutateAsync: updatePost, isLoading: isLoadingUpdate } =
+    const { mutateAsync: updatePost, isPending: isLoadingUpdate } =
     useUpdatePost();
  
   // 2. Define a submit handler.

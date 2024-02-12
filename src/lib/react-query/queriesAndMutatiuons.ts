@@ -31,7 +31,6 @@ import { INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types";
 // ============================================================
 // AUTH QUERIES
 // ============================================================
-
 export const useCreateUserAccount = () => {
   return useMutation({
     mutationFn: (user: INewUser) => createUserAccount(user),
@@ -56,6 +55,24 @@ export const useSignOutAccount = () => {
 // ============================================================
 
 
+
+export const useGetPosts = () => {
+  return useInfiniteQuery({
+    queryKey: [QUERY_KEYS.GET_INFINITE_POSTS],
+    queryFn: getInfinitePosts as any,
+    initialPageParam: undefined,
+    getNextPageParam: (lastPage: any) => {
+      // If there's no data, there are no more pages.
+      if (lastPage && lastPage.documents.length === 0) {
+        return null;
+      }
+
+      // Use the $id of the last document as the cursor.
+      const lastId = lastPage.documents[lastPage.documents.length - 1].$id;
+      return lastId;
+    },
+  });
+};
 
 export const useSearchPosts = (searchTerm: string) => {
   return useQuery({
@@ -226,23 +243,6 @@ export const useUpdateUser = () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_USER_BY_ID, data?.$id],
       });
-    },
-  });
-};
-
-export const useGetPosts = () => {
-  return useInfiniteQuery({
-    queryKey: [QUERY_KEYS.GET_INFINITE_POSTS],
-    queryFn: getInfinitePosts ,
-    getNextPageParam: (lastPage) => {
-      // If there's no data, there are no more pages.
-      if (lastPage && lastPage.documents.length === 0) {
-        return null;
-      }
-
-      // Use the $id of the last document as the cursor.
-      const lastId = lastPage.documents[lastPage?.documents.length - 1].$id;
-      return lastId;
     },
   });
 };
